@@ -18,7 +18,6 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        print("test")
 
         self.check_button = QtWidgets.QPushButton(self.centralwidget)
         self.check_button.setGeometry(QtCore.QRect(180, 448, 93, 30))
