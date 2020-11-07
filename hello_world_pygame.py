@@ -34,7 +34,6 @@ while True:
         x += stride
     elif keys[pygame.K_a]:
         x -= stride
-        left = True;
     elif keys[pygame.K_w]:
         y -= stride
     elif keys[pygame.K_s]:
