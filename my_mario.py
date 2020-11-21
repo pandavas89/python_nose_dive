@@ -18,8 +18,8 @@ def loadSprite(action, direction):
     spriteList = []
     for i in range(1, 11):
         if (direction == "R"):
-            spriteList.append(pygame.transfrom.rotozoom(pygame.image.load('freeknight/png/%s (%d).png' %(action, i), -5, 0.35))
-        else (direction =="L"):
+            spriteList.append(pygame.transform.rotozoom(pygame.image.load('freeknight/png/%s (%d).png' %(action, i)), -5, 0.35))
+        elif (direction =="L"):
             spriteList.append(pygame.transform.rotozoom(pygame.transform.flip(pygame.image.load('freeknight/png/%s (%d).png' %(action ,i)),True, False),1,0.35))
 
     return spriteList
@@ -31,7 +31,7 @@ attackRight = loadSprite("Attack", "R")
 walkRight = loadSprite("Walk", "R")
 
 #왼쪽으로 걷는 스프라이트
-walkLeft = loadSprite("Walk", "L")
+walkLeft = loadSprite("Walk","L")
 
 vel = 10
 jump = 20
@@ -78,7 +78,7 @@ def redrawG():
 run = True
 
 while run:
-    clock.tick(60)
+    clock.tick(48)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
