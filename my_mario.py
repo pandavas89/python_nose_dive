@@ -5,8 +5,6 @@ win = pygame.display.set_mode(size)
 
 #png 리소스를 불러옵니다 : script를 이용하는 경우 working directory 문제로 작동하지 않을 수 있음
 bg = pygame.transform.rotozoom(pygame.image.load('freetileset/png/BG/BG.png'),0,0.85)
-char1 = pygame.transform.rotozoom(pygame.image.load('freeknight/png/Walk (1).png'),0,0.35)
-char2 = pygame.transform.rotozoom(pygame.transform.flip(pygame.image.load('freeknight/png/Walk (1).png'),True, False),0,0.35)
 
 #배경을 표시합니다
 win.blit(bg,(0,0))
@@ -33,15 +31,20 @@ walkLeft = loadSprite("Walk","L")
 # 정지 스프라이트
 idleRight = loadSprite("Idle", "R")
 idleLeft = loadSprite("Idle", "L")
+# 달리기 스프라이트
+runRight = loadSprite("Run", "R")
+runLeft = loadSprite("Run", "L")
 
 vel = 10
-jump = 100
+rvel = 20
+jump = 70
 yvel = 0
 x = 50
 y = 350
 left = False
 right = False
 attack = False
+running = False
 atkcount = 0
 walkcount = 0
 spriteCount = 0
@@ -54,20 +57,26 @@ def redrawG():
     win.blit(bg, (0, 0))
 
     # walkCount를 초기화합니다
-    if walkcount >= 60:
+    if walkcount >= 30:
         walkcount = 0
     if spriteCount >= 30:
         spriteCount = 0
 
     # 오른쪽으로 걸을 때
     if right:
-        win.blit(walkRight[walkcount//6],(x,y))
+        if running:
+            win.blit(runRight[walkcount//3], (x,y))
+        else:
+            win.blit(walkRight[walkcount//3],(x,y))
         walkcount += 1
         spriteCount = 0
 
     # 왼쪽으로 걸을 때
     elif left:
-        win.blit(walkLeft[walkcount//6],(x,y))
+        if running:
+            win.blit(runLeft[walkcount//3], (x,y))
+        else:
+            win.blit(walkLeft[walkcount//3],(x,y))
         walkcount += 1
         spriteCount = 0
     # 오른쪽을 보고 멈춰 있을 때
@@ -104,8 +113,7 @@ while run:
             pass
 
     if (y < 350):
-        print("falling")
-        yvel += 10
+        yvel += 9
         y += yvel
         if y > 350:
             y = 350
@@ -116,27 +124,31 @@ while run:
     if keys[pygame.K_RIGHT]:
         if x > width - 100:
             x = width - 100
-        x += vel
+        if running:
+            x += rvel
+        else:
+            x += vel
         right = True
         left = False
     if keys[pygame.K_LEFT]:
         if x < -150:
             x = -150
-        x -= vel
+        if running:
+            x -= rvel
+        else:
+            x -= vel
         right = False
         left = True
 
     if keys[pygame.K_UP]:
-        print("jump key")
         if y == 350 and yvel == 0:
-            print("jump")
             yvel -= jump
             y -= 10
 
     if keys[pygame.K_SPACE]:
-        attack = True
-
-
+        running = True
+    else:
+        running = False
 
     print(y, yvel)
 
