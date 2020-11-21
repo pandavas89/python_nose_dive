@@ -7,9 +7,10 @@ height = 400
 white = (255, 255, 255)
 black = (  0,   0,   0)
 fps = 30
-stride = 5
+stride = 10
 x = 0
 y = 0
+vel = 0
 
 pygame.init()
 
@@ -24,20 +25,28 @@ hellorect = helloworld.get_rect()
 hellorect.center = (width / 2, height / 2)
 
 while True:
-
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
-        x += stride
+        if hellorect.right < width :
+            x += stride
     elif keys[pygame.K_a]:
-        x -= stride
-    elif keys[pygame.K_w]:
-        y -= stride
+        if hellorect.left > 0:
+            x -= stride
+    if keys[pygame.K_w]:
+        if hellorect.top > 0:
+            #점프
+            y -= 4 * stride
     elif keys[pygame.K_s]:
+        if hellorect.bottom < height :
+            y += stride
+    #떨어지기
+    if hellorect.bottom < height:
         y += stride
+
     displaysurf.fill(white)
     hellorect.center = (width/2 + x, height /2 + y)
     displaysurf.blit(helloworld, hellorect)
