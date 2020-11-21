@@ -24,17 +24,18 @@ def loadSprite(action, direction):
 
     return spriteList
 
-# 오른쪽을 공격하는 스프라이트
+# 공격하는 스프라이트
 attackRight = loadSprite("Attack", "R")
-
-# 오른쪽으로 걷는 스프라이트
+attackLeft = loadSprite("Attack", "L")
+# 걷는 스프라이트
 walkRight = loadSprite("Walk", "R")
-
-#왼쪽으로 걷는 스프라이트
 walkLeft = loadSprite("Walk","L")
+# 정지 스프라이트
+idleRight = loadSprite("Idle", "R")
+idleLeft = loadSprite("Idle", "L")
 
 vel = 10
-jump = 20
+jump = 100
 yvel = 0
 x = 50
 y = 350
@@ -43,45 +44,56 @@ right = False
 attack = False
 atkcount = 0
 walkcount = 0
+spriteCount = 0
 stopd = True
 
 # 화면을 갱신(redraw)합니다
 def redrawG():
     global walkcount
+    global spriteCount
     win.blit(bg, (0, 0))
 
     # walkCount를 초기화합니다
-    if walkcount >= 32:
+    if walkcount >= 60:
         walkcount = 0
+    if spriteCount >= 30:
+        spriteCount = 0
 
     # 오른쪽으로 걸을 때
     if right:
-        win.blit(walkRight[walkcount//4],(x,y))
-        print(walkcount//4)
+        win.blit(walkRight[walkcount//6],(x,y))
         walkcount += 1
+        spriteCount = 0
 
     # 왼쪽으로 걸을 때
     elif left:
-        win.blit(walkLeft[walkcount//4],(x,y))
+        win.blit(walkLeft[walkcount//6],(x,y))
         walkcount += 1
+        spriteCount = 0
     # 오른쪽을 보고 멈춰 있을 때
     elif stopd :
-        win.blit(char1, (x, y))
-        print("Right Direction")
+        win.blit(idleRight[spriteCount//3], (x,y))
+        spriteCount += 1
+        walkCount = 0
     # 왼쪽을 보고 멈춰 있을 때
     else:
-        win.blit(char2, (x,y))
-        print("Left Direction")
+        win.blit(idleLeft[spriteCount//3], (x,y))
+        spriteCount += 1
+        walkCount = 0
         pass
     pygame.display.update()
 
 run = True
 
 while run:
-    clock.tick(48)
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.KEYDOWN:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                pass
         if event.type == pygame.KEYUP:
             if right:
                 right = False
@@ -90,6 +102,14 @@ while run:
                 left = False
                 stopd = False
             pass
+
+    if (y < 350):
+        print("falling")
+        yvel += 10
+        y += yvel
+        if y > 350:
+            y = 350
+            yvel = 0
 
     keys = pygame.key.get_pressed()
 
@@ -105,18 +125,19 @@ while run:
         x -= vel
         right = False
         left = True
+
     if keys[pygame.K_UP]:
-        if y < 500 and yvel == 0:
+        print("jump key")
+        if y == 350 and yvel == 0:
+            print("jump")
             yvel -= jump
+            y -= 10
+
     if keys[pygame.K_SPACE]:
         attack = True
 
-    if yvel != 0:
-        y += yvel
-        yvel += 10
-        if y > 500:
-            y = 500
-            yvel = 0
+
+
     print(y, yvel)
 
     redrawG()
